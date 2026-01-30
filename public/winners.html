@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>¡Ganaste!</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One:wght@400&display=swap" rel="stylesheet">
+</head>
+<body>
+    <audio id="winnerMusic" loop autoplay>
+        <source src="../media/audio/winer.mp3" type="audio/mpeg">
+        Tu navegador no soporta el elemento de audio.
+    </audio>
+
+    <div class="container">
+        <div class="question" id="winnerText">
+            <span class="word winner-word1">¿Lista</span>
+            <span class="word winner-word2">para</span>
+            <span class="word winner-word3">tu</span>
+            <span class="word winner-word4">recompensa?</span>
+        </div>
+    </div>
+
+    <script>
+        // Asegurar que el audio se reproduzca
+        window.addEventListener('load', function() {
+            const audio = document.getElementById('winnerMusic');
+            
+            // Intentar reproducir automáticamente
+            audio.play().catch(function(error) {
+                console.log('Autoplay bloqueado, esperando interacción del usuario');
+                
+                // Si el autoplay está bloqueado, reproducir en la primera interacción
+                document.addEventListener('click', function() {
+                    audio.play();
+                }, { once: true });
+                
+                document.addEventListener('touchstart', function() {
+                    audio.play();
+                }, { once: true });
+            });
+
+            // Iniciar la secuencia de winner
+            startWinnerSequence();
+        });
+
+        function startWinnerSequence() {
+            // Después de 3 segundos, cambiar a "Felicidades!!!!"
+            setTimeout(() => {
+                fadeOutText(() => {
+                    document.getElementById('winnerText').innerHTML = `
+                        <span class="word congratulations-text">¡¡¡Felicidades!!!!</span>
+                    `;
+                    fadeInText();
+                    
+                    // Después de 3 segundos, mostrar las instrucciones y el código
+                    setTimeout(() => {
+                        fadeOutText(() => {
+                            document.getElementById('winnerText').innerHTML = `
+                                <div class="winner-content">
+                                    <div class="instruction-text">Cópialo, lo tendrás que reclamar más tarde en la página oficial de Roblox</div>
+                                    <div class="code-container">
+                                        <input type="text" id="codeInput" value="alsdkocnOJIONFLA" readonly>
+                                        <button class="btn btn-copy" onclick="copyCode()">📋 Copiar</button>
+                                    </div>
+                                    <button class="btn btn-thanks" onclick="showFinalMessage()">¡GRACIAAAAS! 🎉</button>
+                                </div>
+                            `;
+                            fadeInText();
+                        });
+                    }, 3000);
+                });
+            }, 3000);
+        }
+
+        function copyCode() {
+            const codeInput = document.getElementById('codeInput');
+            codeInput.select();
+            codeInput.setSelectionRange(0, 99999); // Para móviles
+            
+            try {
+                document.execCommand('copy');
+                // Cambiar temporalmente el texto del botón
+                const copyBtn = document.querySelector('.btn-copy');
+                const originalText = copyBtn.textContent;
+                copyBtn.textContent = '✅ ¡Copiado!';
+                copyBtn.style.background = 'linear-gradient(45deg, #4A9B8E, #7FCDCD)';
+                
+                setTimeout(() => {
+                    copyBtn.textContent = originalText;
+                    copyBtn.style.background = 'linear-gradient(45deg, #8A4FBE, #B565A7)';
+                }, 2000);
+            } catch (err) {
+                console.log('Error al copiar:', err);
+                alert('Código copiado: alsdkocnOJIONFLA');
+            }
+        }
+
+        function showFinalMessage() {
+            fadeOutText(() => {
+                document.getElementById('winnerText').innerHTML = `
+                    <div class="final-birthday">
+                        <span class="word birthday-final">Feliz cumpleaños Gia... 🎂💖</span>
+                    </div>
+                `;
+                fadeInText();
+                
+                // Crear el collage después de mostrar el texto
+                setTimeout(() => {
+                    createBirthdayCollage();
+                }, 1000);
+            });
+        }
+
+        function createBirthdayCollage() {
+            // Crear contenedor para el collage
+            const collageContainer = document.createElement('div');
+            collageContainer.className = 'birthday-collage';
+            collageContainer.id = 'birthdayCollage';
+            document.body.appendChild(collageContainer);
+
+            // Lista de todas las imágenes disponibles
+            const allImages = [
+                'p_omar_g_1.png', 'cook_g_2.png', 'a_plaza_l_1.png', 'a_plaza_g_1.png',
+                'roblox_1.png', 'gia_smile.png', 'roblox_3.png', 'invento1.png',
+                'cake.png', 'knife.png'
+            ];
+
+            // Crear las imágenes del collage
+            allImages.forEach((imageName, index) => {
+                setTimeout(() => {
+                    const img = document.createElement('img');
+                    img.src = `../media/img/${imageName}`;
+                    img.className = 'birthday-collage-img';
+                    
+                    // Posición aleatoria
+                    const maxX = Math.max(window.innerWidth - 100, 200);
+                    const maxY = Math.max(window.innerHeight - 100, 300);
+                    img.style.left = Math.random() * maxX + 'px';
+                    img.style.top = Math.random() * maxY + 'px';
+                    
+                    // Rotación y escala aleatoria
+                    const rotation = Math.random() * 60 - 30; // -30 a +30 grados
+                    const scale = Math.random() * 0.4 + 0.6; // 0.6 a 1.0
+                    img.style.transform = `rotate(${rotation}deg) scale(${scale})`;
+                    
+                    // Opacidad aleatoria para efecto de profundidad
+                    img.style.opacity = Math.random() * 0.4 + 0.6; // 0.6 a 1.0
+                    
+                    collageContainer.appendChild(img);
+                }, index * 200); // Aparecen cada 200ms
+            });
+        }
+
+        // Funciones de fade
+        function fadeOutText(callback) {
+            const winnerText = document.getElementById('winnerText');
+            if (winnerText) {
+                winnerText.style.transition = 'opacity 1s ease-out';
+                winnerText.style.opacity = '0';
+                setTimeout(callback, 1000);
+            } else {
+                callback();
+            }
+        }
+
+        function fadeInText() {
+            const winnerText = document.getElementById('winnerText');
+            if (winnerText) {
+                setTimeout(() => {
+                    winnerText.style.opacity = '1';
+                }, 100);
+            }
+        }
+    </script>
+</body>
+</html>

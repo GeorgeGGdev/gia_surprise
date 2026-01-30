@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Juego de Cumpleaños</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One:wght@400&display=swap" rel="stylesheet">
+</head>
+<body>
+    <audio id="gameMusic" loop autoplay>
+        <source src="../media/audio/game.mp3" type="audio/mpeg">
+        Tu navegador no soporta el elemento de audio.
+    </audio>
+
+    <div class="container">
+        <div class="question" id="gameText">
+            <span class="word game-word1">¡Vamos</span>
+            <span class="word game-word2">a</span>
+            <span class="word game-word3">celebrar!!</span>
+        </div>
+    </div>
+
+    <script>
+        let currentStep = 1;
+        let gameVariables = {
+            timeLeft: 60,
+            cakeCount: 0,
+            knifeCount: 0,
+            gameActive: true,
+            spawnInterval: null,
+            timerInterval: null,
+            itemDuration: 2000
+        };
+
+        // Asegurar que el audio se reproduzca
+        window.addEventListener('load', function() {
+            const audio = document.getElementById('gameMusic');
+            
+            // Intentar reproducir automáticamente
+            audio.play().catch(function(error) {
+                console.log('Autoplay bloqueado, esperando interacción del usuario');
+                
+                // Si el autoplay está bloqueado, reproducir en la primera interacción
+                document.addEventListener('click', function() {
+                    audio.play();
+                }, { once: true });
+                
+                document.addEventListener('touchstart', function() {
+                    audio.play();
+                }, { once: true });
+            });
+
+            // Iniciar la secuencia de instrucciones
+            startGameInstructions();
+        });
+
+        function startGameInstructions() {
+            // Después de 3 segundos, cambiar al primer texto de instrucciones
+            setTimeout(() => {
+                fadeOutText(() => {
+                    document.getElementById('gameText').innerHTML = `
+                        <span class="word instruction-text1">¡Toca los pasteles de chocolate lo más rápido que puedas y recolecta tanto como puedas!</span>
+                    `;
+                    fadeInText();
+                    
+                    // Después de 4 segundos, mostrar la advertencia
+                    setTimeout(() => {
+                        fadeOutText(() => {
+                            document.getElementById('gameText').innerHTML = `
+                                <span class="word instruction-text2">Pero ten cuidado de no cortarte con los cuchillos...</span>
+                            `;
+                            fadeInText();
+                            
+                            // Después de 4 segundos, mostrar el botón de jugar
+                            setTimeout(() => {
+                                fadeOutText(() => {
+                                    document.getElementById('gameText').innerHTML = `
+                                        <div class="game-start">
+                                            <span class="word ready-text">¿Lista para jugar?</span>
+                                            <button class="btn btn-play" onclick="startGame()">¡Jugar! 🎮</button>
+                                        </div>
+                                    `;
+                                    fadeInText();
+                                });
+                            }, 4000);
+                        });
+                    }, 4000);
+                });
+            }, 3000);
+        }
+
+        function startGame() {
+            console.log('Iniciando juego...');
+            // Ocultar el texto de instrucciones y mostrar el juego
+            fadeOutText(() => {
+                document.getElementById('gameText').style.display = 'none';
+                document.querySelector('.container').style.display = 'none';
+                initializeGame();
+            });
+        }
+
+        function initializeGame() {
+            console.log('Inicializando interfaz del juego...');
+            
+            // Crear la interfaz del juego
+            const gameInterface = document.createElement('div');
+            gameInterface.className = 'game-interface';
+            gameInterface.innerHTML = `
+                <div class="game-hud">
+                    <div class="timer" id="gameTimer">1:00</div>
+                    <div class="counters">
+                        <div class="counter">
+                            <span class="counter-icon">❌</span>
+                            <span class="counter-value" id="knifeCounter">0</span>
+                        </div>
+                        <div class="counter">
+                            <span class="counter-icon">✅</span>
+                            <span class="counter-value" id="cakeCounter">0</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="game-area" id="gameArea"></div>
+            `;
+            
+            document.body.appendChild(gameInterface);
+
+            // Resetear variables del juego
+            gameVariables.timeLeft = 60;
+            gameVariables.cakeCount = 0;
+            gameVariables.knifeCount = 0;
+            gameVariables.gameActive = true;
+            gameVariables.itemDuration = 2000;
+
+            // Iniciar el timer
+            gameVariables.timerInterval = setInterval(() => {
+                gameVariables.timeLeft--;
+                const minutes = Math.floor(gameVariables.timeLeft / 60);
+                const seconds = gameVariables.timeLeft % 60;
+                const timerElement = document.getElementById('gameTimer');
+                if (timerElement) {
+                    timerElement.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+                }
+
+                // Aumentar dificultad a los 30 segundos
+                if (gameVariables.timeLeft === 30) {
+                    gameVariables.itemDuration = 1000; // 1 segundo
+                    console.log('Dificultad aumentada!');
+                }
+
+                if (gameVariables.timeLeft <= 0) {
+                    endGame();
+                }
+            }, 1000);
+
+            // Iniciar spawn de elementos
+            gameVariables.spawnInterval = setInterval(spawnItem, 800);
+            console.log('Juego iniciado correctamente');
+        }
+
+        function spawnItem() {
+            if (!gameVariables.gameActive) return;
+
+            const gameArea = document.getElementById('gameArea');
+            if (!gameArea) return;
+
+            const isKnife = Math.random() < 0.4; // 40% probabilidad de cuchillo
+            const item = document.createElement('img');
+            
+            item.src = isKnife ? '../media/img/knife.png' : '../media/img/cake.png';
+            item.className = isKnife ? 'game-knife' : 'game-cake';
+            
+            // Posición aleatoria optimizada para móviles
+            const maxX = Math.max(window.innerWidth - 80, 200);
+            const maxY = Math.max(window.innerHeight - 200, 300);
+            item.style.left = Math.random() * maxX + 'px';
+            item.style.top = (Math.random() * maxY + 100) + 'px';
+            
+            // Event listeners para clicks/touches
+            const handleClick = (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                handleItemClick(item, isKnife);
+            };
+            
+            item.addEventListener('click', handleClick);
+            item.addEventListener('touchstart', handleClick);
+            
+            gameArea.appendChild(item);
+            
+            // Remover después del tiempo especificado
+            setTimeout(() => {
+                if (item.parentNode) {
+                    item.parentNode.removeChild(item);
+                }
+            }, gameVariables.itemDuration);
+        }
+
+        function handleItemClick(item, isKnife) {
+            if (!gameVariables.gameActive) return;
+            
+            if (isKnife) {
+                gameVariables.knifeCount++;
+                const knifeCounter = document.getElementById('knifeCounter');
+                if (knifeCounter) knifeCounter.textContent = gameVariables.knifeCount;
+            } else {
+                gameVariables.cakeCount++;
+                const cakeCounter = document.getElementById('cakeCounter');
+                if (cakeCounter) cakeCounter.textContent = gameVariables.cakeCount;
+            }
+            
+            // Efecto visual al hacer click
+            item.style.transform = 'scale(1.2)';
+            item.style.opacity = '0.5';
+            
+            setTimeout(() => {
+                if (item.parentNode) {
+                    item.parentNode.removeChild(item);
+                }
+            }, 200);
+        }
+
+        function endGame() {
+            console.log('Terminando juego...');
+            gameVariables.gameActive = false;
+            
+            if (gameVariables.timerInterval) {
+                clearInterval(gameVariables.timerInterval);
+            }
+            if (gameVariables.spawnInterval) {
+                clearInterval(gameVariables.spawnInterval);
+            }
+            
+            // Limpiar elementos restantes
+            const gameArea = document.getElementById('gameArea');
+            if (gameArea) gameArea.innerHTML = '';
+            
+            // Mostrar "Tiempo!!!!"
+            const gameInterface = document.querySelector('.game-interface');
+            if (gameInterface) {
+                gameInterface.innerHTML = `
+                    <div class="game-over">
+                        <div class="time-up-text">¡¡¡Tiempo!!!</div>
+                        <div class="final-score">
+                            <div>Pasteles: ${gameVariables.cakeCount}</div>
+                            <div>Cuchillos: ${gameVariables.knifeCount}</div>
+                        </div>
+                    </div>
+                `;
+                
+                setTimeout(() => {
+                    showResults();
+                }, 2000);
+            }
+        }
+
+        function showResults() {
+            const finalScore = gameVariables.cakeCount - gameVariables.knifeCount;
+            const won = finalScore >= 15;
+            
+            const gameInterface = document.querySelector('.game-interface');
+            if (gameInterface) {
+                gameInterface.innerHTML = `
+                    <div class="game-results">
+                        <div class="result-text ${won ? 'win' : 'lose'}">
+                            ${won ? '¡Ganaste! 🎉' : 'Volver a intentar 😅'}
+                        </div>
+                        <div class="final-calculation">
+                            ${gameVariables.cakeCount} - ${gameVariables.knifeCount} = ${finalScore}
+                        </div>
+                        <button class="btn btn-continue" onclick="${won ? 'goToWinners()' : 'restartGame()'}">
+                            ¡Vamos! ${won ? '🏆' : '🔄'}
+                        </button>
+                    </div>
+                `;
+            }
+        }
+
+        function goToWinners() {
+            window.location.href = 'winners.html';
+        }
+
+        function restartGame() {
+            location.reload();
+        }
+
+        // Funciones de fade
+        function fadeOutText(callback) {
+            const gameText = document.getElementById('gameText');
+            if (gameText) {
+                gameText.style.transition = 'opacity 1s ease-out';
+                gameText.style.opacity = '0';
+                setTimeout(callback, 1000);
+            } else {
+                callback();
+            }
+        }
+
+        function fadeInText() {
+            const gameText = document.getElementById('gameText');
+            if (gameText) {
+                setTimeout(() => {
+                    gameText.style.opacity = '1';
+                }, 100);
+            }
+        }
+    </script>
+</body>
+</html>

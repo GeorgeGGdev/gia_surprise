@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bienvenida Gia</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One:wght@400&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <div class="question" id="questionText">
+            <span class="word word1">¿Sabes</span>
+            <span class="word word2">que</span>
+            <span class="word word3">día</span>
+            <span class="word word4">es</span>
+            <span class="word word5">hoy?</span>
+        </div>
+        
+        <div class="buttons" id="buttonsContainer">
+            <button class="btn btn-yes" onclick="showBirthday()">Sí ✨</button>
+            <button class="btn btn-no" onclick="showBirthday()">No 🙈</button>
+        </div>
+    </div>
+
+    <canvas id="confetti-canvas"></canvas>
+
+    <script>
+        let currentStep = 1;
+
+        function showBirthday() {
+            if (currentStep === 1) {
+                document.getElementById('questionText').innerHTML = `
+                    <span class="word birthday-word1">¡ES</span>
+                    <span class="word birthday-word2">TU</span>
+                    <span class="word birthday-word3">CUMPLEAÑOS!!!</span>
+                `;
+                
+                document.getElementById('buttonsContainer').innerHTML = `
+                    <button class="btn btn-birthday" onclick="showReady()">¡SIIII! 🎉</button>
+                `;
+                
+                startConfetti();
+                currentStep = 2;
+            }
+        }
+
+        function showReady() {
+            if (currentStep === 2) {
+                stopConfetti();
+                document.getElementById('questionText').innerHTML = `
+                    <span class="word ready-word1">¿Estás</span>
+                    <span class="word ready-word2">lista?</span>
+                `;
+                
+                document.getElementById('buttonsContainer').innerHTML = `
+                    <button class="btn btn-go" onclick="goToExp()">¡Vamos! 🚀</button>
+                `;
+                
+                currentStep = 3;
+            }
+        }
+
+        function goToExp() {
+            window.location.href = 'exp_1.html';
+        }
+
+        // Confetti Animation
+        let confettiCanvas, confettiCtx, confettiParticles = [], confettiAnimationId;
+
+        function initConfetti() {
+            confettiCanvas = document.getElementById('confetti-canvas');
+            confettiCtx = confettiCanvas.getContext('2d');
+            confettiCanvas.width = window.innerWidth;
+            confettiCanvas.height = window.innerHeight;
+        }
+
+        function createConfettiParticle() {
+            return {
+                x: Math.random() < 0.5 ? -10 : window.innerWidth + 10,
+                y: Math.random() * window.innerHeight,
+                vx: Math.random() < 0.5 ? Math.random() * 3 + 1 : -(Math.random() * 3 + 1),
+                vy: (Math.random() - 0.5) * 2,
+                color: ['#E8D5FF', '#C8A8E9', '#B8F2E6', '#7FCDCD', '#FFB6C1', '#DDA0DD'][Math.floor(Math.random() * 6)],
+                size: Math.random() * 8 + 4,
+                rotation: Math.random() * 360,
+                rotationSpeed: (Math.random() - 0.5) * 10
+            };
+        }
+
+        function updateConfetti() {
+            confettiCtx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+            
+            for (let i = confettiParticles.length - 1; i >= 0; i--) {
+                let p = confettiParticles[i];
+                p.x += p.vx;
+                p.y += p.vy;
+                p.rotation += p.rotationSpeed;
+                
+                confettiCtx.save();
+                confettiCtx.translate(p.x, p.y);
+                confettiCtx.rotate(p.rotation * Math.PI / 180);
+                confettiCtx.fillStyle = p.color;
+                confettiCtx.fillRect(-p.size/2, -p.size/2, p.size, p.size);
+                confettiCtx.restore();
+                
+                if (p.x < -20 || p.x > window.innerWidth + 20 || p.y < -20 || p.y > window.innerHeight + 20) {
+                    confettiParticles.splice(i, 1);
+                }
+            }
+            
+            if (Math.random() < 0.3) {
+                confettiParticles.push(createConfettiParticle());
+            }
+            
+            confettiAnimationId = requestAnimationFrame(updateConfetti);
+        }
+
+        function startConfetti() {
+            initConfetti();
+            updateConfetti();
+        }
+
+        function stopConfetti() {
+            if (confettiAnimationId) {
+                cancelAnimationFrame(confettiAnimationId);
+            }
+            confettiParticles = [];
+            if (confettiCtx) {
+                confettiCtx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+            }
+        }
+
+        window.addEventListener('resize', () => {
+            if (confettiCanvas) {
+                confettiCanvas.width = window.innerWidth;
+                confettiCanvas.height = window.innerHeight;
+            }
+        });
+    </script>
+</body>
+</html>
