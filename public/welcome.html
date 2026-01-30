@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0, minimum-scale=1.0">
     <title>Bienvenida Gia</title>
     <link rel="stylesheet" href="styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Fredoka+One:wght@400&display=swap" rel="stylesheet">
@@ -18,8 +18,8 @@
         </div>
         
         <div class="buttons" id="buttonsContainer">
-            <button class="btn btn-yes" onclick="showBirthday()">Sí ✨</button>
-            <button class="btn btn-no" onclick="showBirthday()">No 🙈</button>
+            <button class="btn btn-yes" onclick="showBirthday()">Sí</button>
+            <button class="btn btn-no" onclick="showBirthday()">No</button>
         </div>
     </div>
 
@@ -54,7 +54,7 @@
                 `;
                 
                 document.getElementById('buttonsContainer').innerHTML = `
-                    <button class="btn btn-go" onclick="goToExp()">¡Vamos! 🚀</button>
+                    <button class="btn btn-go" onclick="goToExp()">¡Vamos!</button>
                 `;
                 
                 currentStep = 3;

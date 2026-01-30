@@ -2,14 +2,14 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0, minimum-scale=1.0">
     <title>Experiencia 1</title>
     <link rel="stylesheet" href="styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Fredoka+One:wght@400&display=swap" rel="stylesheet">
 </head>
 <body>
     <audio id="backgroundMusic" loop autoplay>
-        <source src="../media/audio/milobg.mp3" type="audio/mpeg">
+        <source src="media/audio/milobg.mp3" type="audio/mpeg">
         Tu navegador no soporta el elemento de audio.
     </audio>
 
@@ -31,9 +31,9 @@
         let confettiCanvas, confettiCtx, confettiParticles = [], confettiAnimationId;
         let sparklesCanvas, sparklesCtx, sparklesParticles = [], sparklesAnimationId;
         const images = [
-            { src: '../media/img/p_omar_g_1.png', side: 'right' },
-            { src: '../media/img/cook_g_2.png', side: 'left' },
-            { src: '../media/img/a_plaza_l_1.png', side: 'right' }
+            { src: 'media/img/p_omar_g_1.png', side: 'right' },
+            { src: 'media/img/cook_g_2.png', side: 'left' },
+            { src: 'media/img/a_plaza_l_1.png', side: 'right' }
         ];
 
         // Asegurar que el audio se reproduzca
@@ -367,7 +367,7 @@
                 setTimeout(() => {
                     fadeOutText(() => {
                         document.getElementById('mainText').innerHTML = `
-                            <span class="word memory-text2">Donde sonríamos sin razón...</span>
+                            <span class="word memory-text2">Donde sonreíamos sin razón...</span>
                         `;
                         fadeInText();
                         
@@ -435,12 +435,12 @@
         // Nueva secuencia de imágenes finales
         function startFinalImageSequence() {
             const finalImages = [
-                { src: '../media/img/a_plaza_g_1.png', side: 'right' },
-                { src: '../media/img/roblox_1.png', side: 'left' },
-                { src: '../media/img/vid_omar2.mp4', side: 'right' },
-                { src: '../media/img/gia_smile.png', side: 'left' },
-                { src: '../media/img/roblox_3.png', side: 'right' },
-                { src: '../media/img/invento1.png', side: 'left' }
+                { src: 'media/img/a_plaza_g_1.png', side: 'right' },
+                { src: 'media/img/roblox_1.png', side: 'left' },
+                { src: 'media/img/vid_omar2.mp4', side: 'right' },
+                { src: 'media/img/gia_smile.png', side: 'left' },
+                { src: 'media/img/roblox_3.png', side: 'right' },
+                { src: 'media/img/invento1.png', side: 'left' }
             ];
             
             let imageIndex = 0;
@@ -518,9 +518,9 @@
             // Ocultar texto y mostrar primer video
             fadeOutText(() => {
                 document.getElementById('mainText').style.display = 'none';
-                showVideo('../media/msg/uziel_vid.mp4', () => {
+                showVideo('media/msg/uziel_vid.mp4', () => {
                     // Después del primer video, mostrar el segundo
-                    showVideo('../media/msg/melany_vid.mp4', () => {
+                    showVideo('media/msg/melany_vid.mp4', () => {
                         // Después del segundo video, continuar
                         document.getElementById('mainText').style.display = 'block';
                         document.getElementById('mainText').innerHTML = `
@@ -585,7 +585,7 @@
             imageList.forEach((imageName, index) => {
                 setTimeout(() => {
                     const img = document.createElement('img');
-                    img.src = `../media/img/${imageName}`;
+                    img.src = `media/img/${imageName}`;
                     img.className = 'collage-img';
                     
                     // Posición aleatoria

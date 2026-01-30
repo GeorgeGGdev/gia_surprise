@@ -2,14 +2,14 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0, minimum-scale=1.0">
     <title>¡Ganaste!</title>
     <link rel="stylesheet" href="styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Fredoka+One:wght@400&display=swap" rel="stylesheet">
 </head>
 <body>
     <audio id="winnerMusic" loop autoplay>
-        <source src="../media/audio/winer.mp3" type="audio/mpeg">
+        <source src="media/audio/winer.mp3" type="audio/mpeg">
         Tu navegador no soporta el elemento de audio.
     </audio>
 
@@ -131,7 +131,7 @@
             allImages.forEach((imageName, index) => {
                 setTimeout(() => {
                     const img = document.createElement('img');
-                    img.src = `../media/img/${imageName}`;
+                    img.src = `media/img/${imageName}`;
                     img.className = 'birthday-collage-img';
                     
                     // Posición aleatoria
