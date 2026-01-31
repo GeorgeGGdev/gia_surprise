@@ -865,7 +865,7 @@ stilos para videos y collage */
     }
     
     .collage-img {
-        width: 70px;
+        width: 100px;
     }
     
     .celebration-text {
@@ -909,7 +909,7 @@ mizaciones adicionales para móviles */
     }
     
     .collage-img {
-        width: 60px;
+        width: 80px;
     }
     
     .new-text1, .new-text2, .new-text3, .memory-text1, .memory-text2, .impact-text1, .impact-text2, .missing-text {
@@ -939,7 +939,7 @@ mizaciones adicionales para móviles */
     }
     
     .collage-img {
-        width: 50px;
+        width: 70px;
     }
 }/* Estilos
  para game.html */
@@ -1785,7 +1785,7 @@ los para el collage de cumpleaños en winners.html */
 /* Responsive para el collage de cumpleaños */
 @media (max-width: 480px) {
     .birthday-collage-img {
-        width: 60px;
+        width: 90px;
     }
     
     .final-birthday {
@@ -1796,7 +1796,7 @@ los para el collage de cumpleaños en winners.html */
 
 @media (max-width: 360px) {
     .birthday-collage-img {
-        width: 50px;
+        width: 80px;
     }
     
     .final-birthday {
@@ -1807,7 +1807,7 @@ los para el collage de cumpleaños en winners.html */
 
 @media (max-width: 320px) {
     .birthday-collage-img {
-        width: 45px;
+        width: 70px;
     }
     
     .final-birthday {
@@ -2033,7 +2033,7 @@ STILOS ESPECÍFICOS PARA CADA PÁGINA ===== */
 
 .collage-img {
     position: absolute;
-    width: clamp(50px, 12vw, 120px);
+    width: clamp(80px, 18vw, 180px);
     height: auto;
     border-radius: 10px;
     box-shadow: 0 5px 15px rgba(0,0,0,0.3);
@@ -2384,7 +2384,7 @@ STILOS ESPECÍFICOS PARA CADA PÁGINA ===== */
 
 .birthday-collage-img {
     position: absolute;
-    width: clamp(45px, 10vw, 80px);
+    width: clamp(70px, 15vw, 120px);
     height: auto;
     border-radius: 10px;
     box-shadow: 0 5px 15px rgba(0,0,0,0.2);
